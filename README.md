@@ -1,24 +1,37 @@
 # Serverless header function
 
+Run a js file locally before lambda runs
+
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 
-Not compatible with Serverless 1.0.0 and above
+> Not compatible with Serverless 1.0.0 and above
 
-#### Supports:
-  > Running a function before the lambda by default on every `sls function run`
+### Installation
+Make sure you have Node.js v4.0+ and Serverless Framework installed
+Install plugin in the root level of your Serverless project
 
-  > Wrap a function inside lambda before deployment and run the function by default on lambda run
+`npm install --save-dev serverless-header-function`
 
-  > Multiple functions
+Append the plugin's name to serverless plugins list in `s-project.json`
+```
+plugins: [
+  "serverless-header-function"
+]
+```
 
-#### Usage:
-  > List all js path file relative to project root
+### Supports:
+1. Running a function before the lambda by default on every `sls function run`.
+2. Multiple functions.
 
-  > Exports the file as a single function `module.exports = function (a, b) { console.log(a,b) }`
-
-  > Profit
-
-#### Under the hood:
-  > The plugin will append the `require('path-to-your-header-function')()` state in the beginning of all lambda handler.js file and and immediately self-trigger.
-
-  > If first line is 'use strict', append below it
+### Usage:
+1. List all js path file relative to project root in `s-project.json` under `custom.headerfunctions`
+```
+custom: {
+    headerfunctions: [
+      'lib/func-a.js',
+      'src/a/b/c/function-bcde.js'
+    ]
+}
+```
+2. Exports the file as a single function `module.exports = function (a, b) { console.log(a,b) }`
+3. Profit!

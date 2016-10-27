@@ -14,10 +14,6 @@ module.exports = function (S) {
 		}
 
 		registerHooks () {
-			S.addHook(this.preFunctionDeploy.bind(this), {
-				action: 'functionDeploy',
-				event: 'pre',
-			});
 			S.addHook(this.preFunctionRun.bind(this), {
 				action: 'functionRun',
 				event: 'pre',
@@ -25,22 +21,15 @@ module.exports = function (S) {
 			return Promise.resolve();
 		}
 
-		preFunctionDeploy (evt) {
-      console.log(evt);
-      const functionNames = evt.options.names;
-      return Promise.resolve(evt);
-		}
-
 		preFunctionRun (evt) {
-      const project = S.getProject();
-      const functionPaths = project.custom.headerfunctions;
+      const headerFunctionPaths = S.getProject().custom.headerfunctions;
 
-      if (functionPaths && !(functionPaths instanceof Array)) {
+      if (headerFunctionPaths && !(headerFunctionPaths instanceof Array)) {
         throw new Error('Function paths must be an array and path must be relative to project root');
       }
 
-      if (functionPaths) {
-        functionPaths.filter((item, pos) => functionPaths.indexOf(item) === pos).forEach(p => {
+      if (headerFunctionPaths) {
+        headerFunctionPaths.filter((item, pos) => headerFunctionPaths.indexOf(item) === pos).forEach(p => {
           require(path.resolve(p))();
         })
       }

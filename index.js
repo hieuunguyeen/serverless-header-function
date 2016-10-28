@@ -18,13 +18,21 @@ module.exports = function (S) {
 				action: 'functionDeploy',
 				event: 'pre',
 			});
+			S.addHook(this.postFunctionDeploy.bind(this), {
+				action: 'functionDeploy',
+				event: 'post',
+			});
 			S.addHook(this.preFunctionRun.bind(this), {
 				action: 'functionRun',
 				event: 'pre',
 			});
+			S.addHook(this.postFunctionRun.bind(this), {
+				action: 'functionRun',
+				event: 'post',
+			});
 			return Promise.resolve();
 		}
-    
+
     digestQueue(queue, evt) {
       queue.forEach(item => {
         item.params.push(evt);
@@ -38,8 +46,18 @@ module.exports = function (S) {
       return this.digestQueue(queue, evt);
     }
 
+    postFunctionDeploy(evt) {
+      const queue = this.parseConfig('function', 'post', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
+
 		preFunctionRun (evt) {
       const queue = this.parseConfig('function', 'pre', 'run');
+      return this.digestQueue(queue, evt);
+		}
+
+		postFunctionRun (evt) {
+      const queue = this.parseConfig('function', 'post', 'run');
       return this.digestQueue(queue, evt);
 		}
 

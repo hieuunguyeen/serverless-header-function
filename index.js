@@ -14,6 +14,10 @@ module.exports = function (S) {
 		}
 
 		registerHooks () {
+			S.addHook(this.preFunctionDeploy.bind(this), {
+				action: 'functionDeploy',
+				event: 'pre',
+			});
 			S.addHook(this.preFunctionRun.bind(this), {
 				action: 'functionRun',
 				event: 'pre',
@@ -21,21 +25,30 @@ module.exports = function (S) {
 			return Promise.resolve();
 		}
 
+    preFunctionDeploy(evt) {
+      const queue = this.parseConfig('function', 'pre', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
+
 		preFunctionRun (evt) {
-      const headerFunctionPaths = S.getProject().custom.headerfunctions;
-
-      if (headerFunctionPaths && !(headerFunctionPaths instanceof Array)) {
-        throw new Error('Function paths must be an array and path must be relative to project root');
-      }
-
-      if (headerFunctionPaths) {
-        headerFunctionPaths.filter((item, pos) => headerFunctionPaths.indexOf(item) === pos).forEach(p => {
-          require(path.resolve(p))();
-        })
-      }
-
-      return Promise.resolve(evt);
+      const queue = this.parseConfig('function', 'pre', 'run');
+      return this.digestQueue(queue, evt);
 		}
+
+    parseConfig(target, event, action) {
+      const config = S.getProject().custom.headerfunctions;
+      return config.filter(item => {
+        const hook = item.hook.split('-');
+        return target === hook[0] && event === hook[1] && action === hook[2];
+      })
+    }
+
+    digestQueue(queue, evt) {
+      queue.forEach(item => {
+        require(path.resolve(item.path)).apply(item.params)
+      })
+      return Promise.resolve(evt)
+    }
 	}
 
 	return ServerlessSlackPlugin;

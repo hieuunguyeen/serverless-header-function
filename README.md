@@ -1,6 +1,6 @@
 # Serverless header function
 
-Run a js file locally before lambda runs
+Run a js file locally for every registered Serverless actions
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 
@@ -19,19 +19,35 @@ plugins: [
 ]
 ```
 
-### Supports:
-1. Running a function before the lambda by default on every `sls function run`.
-2. Multiple functions.
+### Current supports:
+1. Running a function by a hook
+3. Serially execute multiple functions. TODO: Support Async
 
 ### Usage:
-1. List all js path file relative to project root in `s-project.json` under `custom.headerfunctions`
+1. List all js path file relative to project root in `s-project.json` under `custom.headerfunctions`, the disired hook and params.
 ```
 custom: {
     headerfunctions: [
-      'lib/func-a.js',
-      'src/a/b/c/function-bcde.js'
+      {
+        path: 'lib/func-a.js',
+        hook: 'function-pre-run',
+        params: []
+      },
+      {
+        path: 'src/a/b/c/function-bcde.js',
+        hook: 'function-post-deploy',
+        params: ['a', 1, null, true]
+      }
     ]
 }
 ```
-2. Exports the file as a single function `module.exports = function (a, b) { console.log(a,b) }`
-3. Profit!
+2. Hooks are in the format of `target-hook-action`. `target` and `hook` input are mandatory. Currently supported input are:
+```
+target: enum['function']
+hook: enum['run', 'deploy']
+params: array
+```
+3. Params will be digested in `require(path).apply(params)` manner. Therefore in the header function file, retrieve params by calling lexical `arguments`
+4. Exports the file as a single function without input parameter
+`module.exports = function () { console.log(a,b) }`
+5. Profit!

@@ -48,6 +48,7 @@ hook: enum['run', 'deploy']
 params: array
 ```
 3. Params will be digested in `require(path).apply(params)` manner. Therefore in the header function file, retrieve params by calling lexical `arguments`
-4. Exports the file as a single function without input parameter
+4. The last of the params will be the **context** object which contains information about the serverless action
+5. Exports the file as a single function without input parameter
 `module.exports = function () { console.log(a,b) }`
-5. Profit!
+6. Profit!

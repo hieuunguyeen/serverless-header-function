@@ -24,6 +24,14 @@ module.exports = function (S) {
 			});
 			return Promise.resolve();
 		}
+    
+    digestQueue(queue, evt) {
+      queue.forEach(item => {
+        item.params.push(evt);
+        require(path.resolve(item.path)).apply(null, item.params);
+      })
+      return Promise.resolve(evt)
+    }
 
     preFunctionDeploy(evt) {
       const queue = this.parseConfig('function', 'pre', 'deploy');
@@ -41,13 +49,6 @@ module.exports = function (S) {
         const hook = item.hook.split('-');
         return target === hook[0] && event === hook[1] && action === hook[2];
       })
-    }
-
-    digestQueue(queue, evt) {
-      queue.forEach(item => {
-        require(path.resolve(item.path)).apply(item.params)
-      })
-      return Promise.resolve(evt)
     }
 	}
 

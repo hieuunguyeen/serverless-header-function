@@ -30,6 +30,14 @@ module.exports = function (S) {
 				action: 'functionRun',
 				event: 'post',
 			});
+			S.addHook(this.preEndpointDeploy.bind(this), {
+				action: 'endpointDeploy',
+				event: 'pre',
+			});
+			S.addHook(this.postEndpointDeploy.bind(this), {
+				action: 'endpointDeploy',
+				event: 'post',
+			});
 			return Promise.resolve();
 		}
 
@@ -60,6 +68,16 @@ module.exports = function (S) {
       const queue = this.parseConfig('function', 'post', 'run');
       return this.digestQueue(queue, evt);
 		}
+
+    preEndpointDeploy(evt) {
+      const queue = this.parseConfig('endpoint', 'pre', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
+
+    postEndpointDeploy(evt) {
+      const queue = this.parseConfig('endpoint', 'post', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
 
     parseConfig(target, event, action) {
       const config = S.getProject().custom.headerfunctions;

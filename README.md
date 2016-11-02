@@ -43,9 +43,9 @@ custom: {
 ```
 2. Hooks are in the format of `target-hook-action`. `target` and `hook` input are mandatory. Currently supported input are:
 ```
-target: enum['function','endpoint'] // Endpoint not yet support run hook
-event: enum['pre', 'post']
-action: enum['run', 'deploy']
+target: enum['function','endpoint', 'event']
+hook: enum['pre', 'post']
+action: enum['run', 'deploy'] // only function support `run` action
 params: array
 ```
 3. Params will be digested in `require(path).apply(params)` manner. Therefore in the header function file, retrieve params by calling lexical `arguments`

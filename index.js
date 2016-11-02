@@ -38,6 +38,15 @@ module.exports = function (S) {
 				action: 'endpointDeploy',
 				event: 'post',
 			});
+
+			S.addHook(this.preEventDeploy.bind(this), {
+				action: 'eventDeploy',
+				event: 'pre',
+			});
+			S.addHook(this.postEventDeploy.bind(this), {
+				action: 'eventDeploy',
+				event: 'post',
+			});
 			return Promise.resolve();
 		}
 
@@ -76,6 +85,16 @@ module.exports = function (S) {
 
     postEndpointDeploy(evt) {
       const queue = this.parseConfig('endpoint', 'post', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
+
+    preEventDeploy(evt) {
+      const queue = this.parseConfig('event', 'pre', 'deploy');
+      return this.digestQueue(queue, evt);
+    }
+
+    postEventDeploy(evt) {
+      const queue = this.parseConfig('event', 'post', 'deploy');
       return this.digestQueue(queue, evt);
     }
 

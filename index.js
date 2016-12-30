@@ -3,10 +3,10 @@
 const path = require('path');
 
 module.exports = function (S) {
-	class ServerlessSlackPlugin extends S.classes.Plugin {
+	class ServerlessPlugin extends S.classes.Plugin {
 
 		static getName () {
-			return 'com.blackevil245.' + ServerlessSlackPlugin.name;
+			return 'com.blackevil245.' + ServerlessPlugin.name;
 		}
 
 		constructor () {
@@ -107,5 +107,5 @@ module.exports = function (S) {
     }
 	}
 
-	return ServerlessSlackPlugin;
+	return ServerlessPlugin;
 };

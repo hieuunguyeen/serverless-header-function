@@ -53,7 +53,7 @@ module.exports = function (S) {
     digestQueue(queue, evt) {
       queue.forEach(item => {
         item.params.push(evt);
-        require(path.resolve(item.path)).apply(null, item.params);
+        require(path.join(S.getProject().getRootPath(), item.path)).apply(null, item.params);
       })
       return Promise.resolve(evt)
     }

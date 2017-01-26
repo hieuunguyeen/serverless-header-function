@@ -49,7 +49,8 @@ action: enum['run', 'deploy'] // only function support `run` action
 params: array
 ```
 3. Params will be digested in `require(path).apply(params)` manner. Therefore in the header function file, retrieve params by calling lexical `arguments`
-4. The last of the params will be the **context** object which contains information about the serverless action
-5. Exports the file as a single function without input parameter
+4. The second last of the params will be the **Serverless** object which contains Serverless classes and actions
+5. The last of the params will be the **context** object which contains information about the serverless action
+6. Exports the file as a single function without input parameter
 `module.exports = function () { console.log(a,b) }`
-6. Profit!
+7. Profit!
